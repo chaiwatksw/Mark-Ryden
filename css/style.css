@@ -1,0 +1,622 @@
+/* ============================================================
+   POLAR LOOP — Landing Page Styles
+   ============================================================ */
+
+:root {
+  --bg:           #000000;
+  --text-heading: #ffffff;
+  --text-body:    #cccccc;
+  --text-label:   #00c5ff;
+  --accent:       #00c5ff;
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --side-pad:     5vw;
+}
+
+/* ── Reset ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  background: var(--bg);
+  scroll-behavior: auto;
+}
+
+body {
+  background: #000000;
+  color: var(--text-heading);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Grain overlay — topmost decorative layer */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  background-size: 300px 300px;
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 9998;
+}
+
+/* ── Loader ── */
+#loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #000000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  transition: opacity 0.9s ease, visibility 0.9s ease;
+}
+
+#loader.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.loader-brand {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 4rem);
+  letter-spacing: 0.35em;
+  color: var(--text-heading);
+}
+
+#loader-bar-track {
+  width: min(320px, 60vw);
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+#loader-bar {
+  position: absolute;
+  top: 0; left: 0;
+  height: 100%;
+  width: 0%;
+  background: var(--accent);
+  transition: width 0.08s linear;
+  box-shadow: 0 0 12px var(--accent);
+}
+
+#loader-percent {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-label);
+}
+
+/* ── Site Header ── */
+.site-header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 1.75rem var(--side-pad);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.site-header .logo {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  letter-spacing: 0.22em;
+  color: #ffffff;
+}
+
+.site-header nav {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+}
+
+.site-header nav a {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-body);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.site-header nav a:hover {
+  color: #ffffff;
+}
+
+.site-header nav a.nav-cta {
+  color: var(--accent);
+  border: 1px solid rgba(0, 197, 255, 0.35);
+  padding: 0.45em 1.2em;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.site-header nav a.nav-cta:hover {
+  background: var(--accent);
+  color: #000000;
+}
+
+/* ── Hero Standalone (100vh, solid black, above canvas) ── */
+.hero-standalone {
+  position: relative;
+  z-index: 10;
+  height: 100vh;
+  background: #000000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* Polar loop background image — fades to black at all edges */
+.hero-bg-image {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.45;
+  /* Radial mask: full opacity in center, fades to transparent at edges */
+  -webkit-mask-image: radial-gradient(
+    ellipse 70% 65% at 50% 50%,
+    black 30%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    ellipse 70% 65% at 50% 50%,
+    black 30%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Ensure hero text sits above the background image */
+.hero-standalone .section-label,
+.hero-standalone .hero-heading,
+.hero-standalone .hero-tagline,
+.hero-standalone .scroll-arrow {
+  position: relative;
+  z-index: 1;
+}
+
+/* Thin horizontal rule above label */
+.hero-label {
+  position: relative;
+}
+
+.hero-label::before {
+  content: '';
+  display: inline-block;
+  width: 2rem;
+  height: 1px;
+  background: var(--accent);
+  vertical-align: middle;
+  margin-right: 0.9em;
+  opacity: 0.8;
+}
+
+.hero-label::after {
+  content: '';
+  display: inline-block;
+  width: 2rem;
+  height: 1px;
+  background: var(--accent);
+  vertical-align: middle;
+  margin-left: 0.9em;
+  opacity: 0.8;
+}
+
+.section-label {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-label);
+  margin-bottom: 1.5rem;
+}
+
+.hero-heading {
+  font-family: var(--font-display);
+  font-size: clamp(5rem, 13vw, 15rem);
+  line-height: 0.9;
+  letter-spacing: 0.04em;
+  color: #ffffff;
+  display: flex;
+  gap: 0.2em;
+  /* Words animate separately */
+  overflow: visible;
+}
+
+.hero-word {
+  display: inline-block;
+}
+
+.hero-tagline {
+  font-family: var(--font-body);
+  font-size: clamp(0.85rem, 1.4vw, 1.2rem);
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  color: var(--text-body);
+  margin-top: 2rem;
+}
+
+.scroll-arrow {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--text-label);
+}
+
+.scroll-arrow span {
+  font-family: var(--font-body);
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.scroll-arrow svg {
+  animation: arrowBounce 2s ease-in-out infinite;
+}
+
+@keyframes arrowBounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(9px); }
+}
+
+/* ── Canvas Wrap (fixed, full viewport) ── */
+.canvas-wrap {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  clip-path: circle(0% at 50% 50%);
+  will-change: clip-path;
+}
+
+canvas#canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Dark Overlay (fixed, for stats section) ── */
+#dark-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  background: rgba(0, 0, 0, 0.9);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ── Marquee (fixed, scroll-driven) ── */
+.marquee-wrap {
+  position: fixed;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  z-index: 4;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0;
+  will-change: opacity;
+  transform: translateY(-50%);
+}
+
+.marquee-text {
+  display: block;
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-size: 12vw;
+  line-height: 1;
+  letter-spacing: 0.03em;
+  color: #ffffff;
+  opacity: 0.1;
+  will-change: transform;
+}
+
+/* ── Scroll Container ── */
+#scroll-container {
+  position: relative;
+  height: 900vh;
+  z-index: 5;
+}
+
+/* ── Scroll Sections (absolute, mid-point positioned by JS) ── */
+.scroll-section {
+  position: absolute;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+  /* children carry initial opacity:0 from GSAP; wrapper is visible */
+}
+
+.scroll-section.active {
+  pointer-events: auto;
+}
+
+/* ── Side-Aligned Content Sections ── */
+.section-content {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+.align-left {
+  padding-left: var(--side-pad);
+  padding-right: 55vw;
+}
+
+.align-right {
+  padding-left: 55vw;
+  padding-right: var(--side-pad);
+}
+
+.section-inner {
+  max-width: 40vw;
+}
+
+.section-heading {
+  font-family: var(--font-display);
+  font-size: clamp(3.2rem, 6vw, 7.5rem);
+  line-height: 0.92;
+  color: var(--text-heading);
+  margin-bottom: 1.75rem;
+  letter-spacing: 0.01em;
+}
+
+.section-body {
+  font-family: var(--font-body);
+  font-size: clamp(0.88rem, 1.15vw, 1.05rem);
+  font-weight: 400;
+  line-height: 1.8;
+  color: var(--text-body);
+  max-width: 38ch;
+}
+
+/* Subtle glow line decorating section labels */
+.section-content .section-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75em;
+  margin-bottom: 1.2rem;
+}
+
+.section-content .section-label::before {
+  content: '';
+  display: inline-block;
+  width: 1.5rem;
+  height: 1px;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+/* ── Stats Section ── */
+.section-stats {
+  padding: 0 var(--side-pad);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3rem 2.5rem;
+  max-width: 1100px;
+  width: 100%;
+  text-align: center;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0.15em;
+  line-height: 1;
+}
+
+.stat-number {
+  font-family: var(--font-display);
+  font-size: clamp(4rem, 7.5vw, 8rem);
+  line-height: 1;
+  color: #ffffff;
+  display: inline-block;
+}
+
+.stat-suffix {
+  font-family: var(--font-body);
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: var(--accent);
+  padding-bottom: 0.6rem;
+}
+
+.stat-label {
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-body);
+  margin-top: 0.9rem;
+}
+
+/* ── CTA Section ── */
+.section-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10vw;
+  min-height: 80vh;
+  will-change: clip-path;
+}
+
+.cta-inner {
+  text-align: center;
+  max-width: 800px;
+}
+
+/* CTA label uses base .section-label styles */
+.section-cta .section-label {
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  gap: 0.75em;
+  margin-bottom: 1.5rem;
+}
+
+.section-cta .section-label::before,
+.section-cta .section-label::after {
+  content: '';
+  display: inline-block;
+  width: 1.5rem;
+  height: 1px;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+.cta-heading {
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 8vw, 10rem);
+  line-height: 0.9;
+  color: #ffffff;
+  letter-spacing: 0.01em;
+  margin-bottom: 2rem;
+}
+
+.cta-body {
+  font-family: var(--font-body);
+  font-size: clamp(0.9rem, 1.3vw, 1.1rem);
+  font-weight: 400;
+  line-height: 1.75;
+  color: var(--text-body);
+  max-width: 50ch;
+  margin: 0 auto 3rem;
+}
+
+.cta-button {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #000000;
+  background: var(--accent);
+  padding: 1.1em 3.5em;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  transition: color 0.3s ease;
+}
+
+.cta-button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: #ffffff;
+  transform: translateX(-101%);
+  transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cta-button:hover {
+  color: #000000;
+}
+
+.cta-button:hover::before {
+  transform: translateX(0);
+}
+
+.cta-button span {
+  position: relative;
+  z-index: 1;
+}
+
+/* Accent glow pulse on CTA button */
+.cta-button {
+  box-shadow: 0 0 0 rgba(0, 197, 255, 0);
+  transition: color 0.3s ease, box-shadow 0.4s ease;
+}
+
+.cta-button:hover {
+  box-shadow: 0 0 30px rgba(0, 197, 255, 0.3);
+}
+
+/* ── Credit ── */
+.credit {
+  margin-top: 3rem;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+  #scroll-container {
+    height: 600vh;
+  }
+
+  .align-left,
+  .align-right {
+    padding-left: 5vw;
+    padding-right: 5vw;
+  }
+
+  .section-inner {
+    max-width: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 2rem;
+    backdrop-filter: blur(4px);
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2.5rem 1.5rem;
+  }
+
+  .hero-heading {
+    flex-direction: column;
+    gap: 0;
+    font-size: clamp(4.5rem, 22vw, 8rem);
+  }
+
+  .marquee-text {
+    font-size: 18vw;
+  }
+
+  .site-header nav a:not(.nav-cta) {
+    display: none;
+  }
+}
