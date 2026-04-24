@@ -7,7 +7,11 @@
 const FRAME_COUNT  = 192;
 const FRAME_SPEED  = 2.0;   // product animation completes at ~50% scroll
 const IMAGE_SCALE  = 0.85;  // padded cover mode sweet spot
-const SCROLL_HEIGHT_VH = 900;
+
+// Must match CSS: 600vh on mobile (≤768px), 900vh on desktop
+function getScrollHeightVH() {
+  return window.innerWidth <= 768 ? 600 : 900;
+}
 
 // ── 2. State ──────────────────────────────────────────────────
 const frames       = new Array(FRAME_COUNT).fill(null);
@@ -43,7 +47,8 @@ gsap.ticker.lagSmoothing(0);
 
 // ── 6. Canvas setup ───────────────────────────────────────────
 function resizeCanvas() {
-  const dpr = window.devicePixelRatio || 1;
+  // Cap DPR at 2 — phones with 3x DPR would triple canvas memory with no visible gain
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
   const w   = window.innerWidth;
   const h   = window.innerHeight;
   canvas.width  = w * dpr;
@@ -54,7 +59,16 @@ function resizeCanvas() {
   if (frames[currentFrame]) drawFrame(currentFrame);
 }
 
-window.addEventListener('resize', resizeCanvas);
+let _resizeTimer;
+window.addEventListener('resize', () => {
+  resizeCanvas();
+  // Debounce section repositioning so it runs once after resize ends
+  clearTimeout(_resizeTimer);
+  _resizeTimer = setTimeout(() => {
+    positionSections();
+    ScrollTrigger.refresh();
+  }, 150);
+});
 resizeCanvas();
 
 // ── Canvas draw ───────────────────────────────────────────────
@@ -204,12 +218,12 @@ function initFrameScrollBinding() {
 
 // ── 11. Position sections absolutely at midpoint ──────────────
 function positionSections() {
+  const scrollH = getScrollHeightVH();
   document.querySelectorAll('.scroll-section').forEach((sec) => {
     const enter = parseFloat(sec.dataset.enter);
     const leave = parseFloat(sec.dataset.leave);
     const mid   = (enter + leave) / 2;
-    // top = midpoint% of 900vh
-    sec.style.top       = `calc(${mid / 100} * ${SCROLL_HEIGHT_VH}vh)`;
+    sec.style.top       = `calc(${mid / 100} * ${scrollH}vh)`;
     sec.style.transform = 'translateY(-50%)';
     sec.style.position  = 'absolute';
   });
@@ -396,6 +410,35 @@ function initDarkOverlay(enter, leave) {
   });
 }
 
+// ── 16. Hamburger / mobile nav ────────────────────────────────
+function initMobileNav() {
+  const hamburger = document.getElementById('hamburger');
+  const mobileNav = document.getElementById('mobile-nav');
+  if (!hamburger || !mobileNav) return;
+
+  function openNav() {
+    hamburger.classList.add('open');
+    hamburger.setAttribute('aria-expanded', 'true');
+    mobileNav.classList.add('open');
+    lenis.stop();
+  }
+
+  function closeNav() {
+    hamburger.classList.remove('open');
+    hamburger.setAttribute('aria-expanded', 'false');
+    mobileNav.classList.remove('open');
+    lenis.start();
+  }
+
+  hamburger.addEventListener('click', () => {
+    mobileNav.classList.contains('open') ? closeNav() : openNav();
+  });
+
+  mobileNav.querySelectorAll('[data-close-nav]').forEach((link) => {
+    link.addEventListener('click', closeNav);
+  });
+}
+
 // ── Boot sequence ─────────────────────────────────────────────
 function init() {
   initHeroTransition();
@@ -405,6 +448,7 @@ function init() {
   initCounters();
   initMarquee();
   initDarkOverlay(0.65, 0.82);
+  initMobileNav();
 
   // Single ScrollTrigger.refresh() after all triggers registered
   ScrollTrigger.refresh();

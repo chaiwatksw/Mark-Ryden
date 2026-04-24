@@ -28,7 +28,21 @@
       <a href="#">Materials</a>
       <a href="#" class="nav-cta">Buy Now</a>
     </nav>
+    <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
   </header>
+
+  <!-- MOBILE NAV OVERLAY -->
+  <div class="mobile-nav" id="mobile-nav" role="dialog" aria-modal="true" aria-label="Navigation">
+    <nav class="mobile-nav-links">
+      <a href="#" class="mobile-nav-link" data-close-nav>Features</a>
+      <a href="#" class="mobile-nav-link" data-close-nav>Materials</a>
+      <a href="#" class="mobile-nav-link nav-cta" data-close-nav>Buy Now</a>
+    </nav>
+  </div>
 
   <!-- HERO (standalone 100vh, solid black) -->
   <section class="hero-standalone">
